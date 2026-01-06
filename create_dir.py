@@ -33,7 +33,7 @@ def load_config():
     config_file = get_config_file_path()
     if config_file.exists():
         try:
-            with open(config_file, 'r') as f:
+            with open(config_file, 'r', encoding='utf-8') as f:
                 return json.load(f)
         except (json.JSONDecodeError, IOError) as e:
             print(f"Error reading config file: {e}", file=sys.stderr)
@@ -47,7 +47,7 @@ def save_config(config):
     """
     config_file = get_config_file_path()
     try:
-        with open(config_file, 'w') as f:
+        with open(config_file, 'w', encoding='utf-8') as f:
             json.dump(config, f, indent=2)
         print(f"Configuration saved to {config_file}")
     except IOError as e:

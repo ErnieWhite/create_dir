@@ -12,6 +12,11 @@ import unittest
 from pathlib import Path
 
 
+# Determine the directory containing create_dir.py dynamically
+TEST_DIR = Path(__file__).parent.resolve()
+CREATE_DIR_SCRIPT = TEST_DIR / 'create_dir.py'
+
+
 class TestCreateDir(unittest.TestCase):
     """Test cases for create_dir functionality."""
     
@@ -47,7 +52,7 @@ class TestCreateDir(unittest.TestCase):
     def test_config_file_creation(self):
         """Test that config file is created with correct path."""
         # Import after setting up environment
-        sys.path.insert(0, '/home/runner/work/create_dir/create_dir')
+        sys.path.insert(0, str(TEST_DIR))
         # Force reload to get updated code
         if 'create_dir' in sys.modules:
             import importlib
@@ -61,7 +66,7 @@ class TestCreateDir(unittest.TestCase):
     
     def test_save_and_load_config(self):
         """Test saving and loading configuration."""
-        sys.path.insert(0, '/home/runner/work/create_dir/create_dir')
+        sys.path.insert(0, str(TEST_DIR))
         import create_dir
         
         test_config = {'base_path': str(self.base_path)}
@@ -73,7 +78,7 @@ class TestCreateDir(unittest.TestCase):
     
     def test_create_directory(self):
         """Test directory creation."""
-        sys.path.insert(0, '/home/runner/work/create_dir/create_dir')
+        sys.path.insert(0, str(TEST_DIR))
         import create_dir
         
         dir_name = 'test_directory'
@@ -86,7 +91,7 @@ class TestCreateDir(unittest.TestCase):
     
     def test_create_directory_already_exists(self):
         """Test that creating an existing directory succeeds."""
-        sys.path.insert(0, '/home/runner/work/create_dir/create_dir')
+        sys.path.insert(0, str(TEST_DIR))
         import create_dir
         
         dir_name = 'existing_directory'
@@ -98,7 +103,7 @@ class TestCreateDir(unittest.TestCase):
     
     def test_create_nested_directory(self):
         """Test creating nested directories."""
-        sys.path.insert(0, '/home/runner/work/create_dir/create_dir')
+        sys.path.insert(0, str(TEST_DIR))
         import create_dir
         
         dir_name = 'parent/child/grandchild'
@@ -113,13 +118,13 @@ class TestCreateDir(unittest.TestCase):
         """Test command line execution with existing config."""
         # Create config file
         config = {'base_path': str(self.base_path)}
-        with open(self.config_file, 'w') as f:
+        with open(self.config_file, 'w', encoding='utf-8') as f:
             json.dump(config, f)
         
         # Run the script
         result = subprocess.run(
-            [sys.executable, '/home/runner/work/create_dir/create_dir/create_dir.py', 'cmdline_test'],
-            cwd='/home/runner/work/create_dir/create_dir',
+            [sys.executable, str(CREATE_DIR_SCRIPT), 'cmdline_test'],
+            cwd=str(TEST_DIR),
             capture_output=True,
             text=True,
             env={**os.environ, 'HOME': self.test_dir}
@@ -133,13 +138,13 @@ class TestCreateDir(unittest.TestCase):
         """Test --config flag to show configuration."""
         # Create config file
         config = {'base_path': str(self.base_path)}
-        with open(self.config_file, 'w') as f:
+        with open(self.config_file, 'w', encoding='utf-8') as f:
             json.dump(config, f)
         
         # Run the script with --config
         result = subprocess.run(
-            [sys.executable, '/home/runner/work/create_dir/create_dir/create_dir.py', '--config', 'dummy'],
-            cwd='/home/runner/work/create_dir/create_dir',
+            [sys.executable, str(CREATE_DIR_SCRIPT), '--config', 'dummy'],
+            cwd=str(TEST_DIR),
             capture_output=True,
             text=True,
             env={**os.environ, 'HOME': self.test_dir}
